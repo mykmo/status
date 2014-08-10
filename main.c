@@ -1,5 +1,7 @@
 #define _GNU_SOURCE
 #include <sys/sysinfo.h>
+#include <sys/types.h>
+#include <sys/stat.h>
 #include <unistd.h>
 #include <stdlib.h>
 #include <string.h>
@@ -46,6 +48,13 @@ static char *readline(char *dir, char *file)
 	return line;
 }
 
+static int isdir(const char *path)
+{
+	struct stat st;
+
+	return ! stat(path, &st) && S_ISDIR(st.st_mode);
+}
+
 static void print_battery_status(void)
 {
 #define PRINT(...) str += snprintf(str, sizeof(status) - (str - status), __VA_ARGS__)
@@ -53,6 +62,9 @@ static void print_battery_status(void)
 	static char status[512];
 
 	char *str = status;
+
+	if (! isdir(SYSPATH))
+		return;
 
 	if (! strcasecmp("charging", readline(SYSPATH, "status")))
 		PRINT("%s ", charging);
