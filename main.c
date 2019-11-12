@@ -13,7 +13,7 @@
 #include <err.h>
 
 #define TOPMEMCOUNT 8
-#define TOOLFONT "xos4 Terminus"
+#define TOOLFONT "Terminus"
 
 struct proc_entry {
 	char *name;
